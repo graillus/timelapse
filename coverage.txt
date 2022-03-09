@@ -1,0 +1,13 @@
+mode: atomic
+github.com/graillus/timelapse/internal/api/client/client.go:20.30,27.2 1 1
+github.com/graillus/timelapse/internal/api/client/client.go:29.60,31.16 2 1
+github.com/graillus/timelapse/internal/api/client/client.go:34.2,39.16 5 1
+github.com/graillus/timelapse/internal/api/client/client.go:43.2,46.16 4 1
+github.com/graillus/timelapse/internal/api/client/client.go:50.2,53.16 3 1
+github.com/graillus/timelapse/internal/api/client/client.go:56.2,59.16 3 1
+github.com/graillus/timelapse/internal/api/client/client.go:63.2,63.21 1 1
+github.com/graillus/timelapse/internal/api/client/client.go:31.16,33.3 1 0
+github.com/graillus/timelapse/internal/api/client/client.go:39.16,41.3 1 0
+github.com/graillus/timelapse/internal/api/client/client.go:46.16,48.3 1 0
+github.com/graillus/timelapse/internal/api/client/client.go:53.16,55.3 1 0
+github.com/graillus/timelapse/internal/api/client/client.go:59.16,61.3 1 0

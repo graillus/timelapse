@@ -8,7 +8,7 @@ type Logger interface {
 	Fatalf(format string, args ...interface{})
 }
 
-var logger Logger
+var logger Logger //nolint:gochecknoglobals
 
 func Debugf(format string, args ...interface{}) {
 	logger.Debugf(format, args...)

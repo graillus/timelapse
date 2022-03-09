@@ -18,7 +18,7 @@ func main() {
 
 	router := mux.NewRouter()
 	router.HandleFunc("/health", func(resp http.ResponseWriter, _ *http.Request) {
-		resp.WriteHeader(200)
+		resp.WriteHeader(http.StatusOK)
 	})
 
 	apiRouter := router.PathPrefix("/api").Subrouter()

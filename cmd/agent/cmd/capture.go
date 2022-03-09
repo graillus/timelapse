@@ -32,11 +32,12 @@ var captureCmd = &cobra.Command{
 }
 
 var (
-	opts      captureOptions
-	api       *client.Client
-	syncMutex sync.Mutex
+	opts      captureOptions //nolint:gochecknoglobals
+	api       *client.Client //nolint:gochecknoglobals
+	syncMutex sync.Mutex     //nolint:gochecknoglobals
 )
 
+//nolint:gochecknoinits
 func init() {
 	flags := captureCmd.Flags()
 	flags.StringVarP(&opts.interval, "interval", "i", "1m", "Duration between two frames")
@@ -49,12 +50,12 @@ func capture() {
 	opts.storagePath = "/tmp/timelapse"
 	api = client.New(opts.serverURL + "/api")
 
-	d, err := time.ParseDuration(opts.interval)
+	interval, err := time.ParseDuration(opts.interval)
 	if err != nil {
 		log.Fatalf("invalid interval %s: %v", opts.interval, err)
 	}
 
-	err = os.MkdirAll(opts.storagePath, 0o755)
+	err = os.MkdirAll(opts.storagePath, os.ModePerm)
 	if err != nil {
 		log.Fatalf("unable to create directory %s: %s", opts.storagePath, err)
 	}
@@ -65,9 +66,11 @@ func capture() {
 	go func() {
 		for range trigger {
 			time.Now().Unix()
+
 			err := captureFrame(fmt.Sprintf("%d", time.Now().Unix()))
 			if err != nil {
 				log.Errorf("Could not capture frame: %v", err)
+
 				continue
 			}
 
@@ -82,9 +85,10 @@ func capture() {
 
 	trigger <- struct{}{}
 
+	//nolint:gosimple
 	for {
 		select {
-		case <-time.After(d):
+		case <-time.After(interval):
 			trigger <- struct{}{}
 		}
 	}
@@ -103,8 +107,7 @@ func captureFrame(id string) error {
 	}
 
 	cmd := exec.Command("raspistill", args...)
-	err := cmd.Run()
-	if err != nil {
+	if err := cmd.Run(); err != nil {
 		return fmt.Errorf("failed to capture frame: %w", err)
 	}
 
@@ -115,21 +118,14 @@ func captureFrame(id string) error {
 	return nil
 }
 
-func syncFilesLoop(eventsChan chan struct{}) {
-	for {
-		<-eventsChan
-		err := syncFiles()
-		if err != nil {
-			log.Errorf("Error syncing files: %v", err)
-		}
-	}
-}
-
 func syncFiles() error {
 	syncMutex.Lock()
 	defer syncMutex.Unlock()
 
-	return filepath.Walk(opts.storagePath, func(path string, info fs.FileInfo, err error) error {
+	err := filepath.Walk(opts.storagePath, func(path string, info fs.FileInfo, err error) error {
+		if err != nil {
+			return err
+		}
 		if info.IsDir() {
 			return nil
 		}
@@ -149,4 +145,9 @@ func syncFiles() error {
 
 		return nil
 	})
+	if err != nil {
+		return fmt.Errorf("error listing files: %w", err)
+	}
+
+	return nil
 }

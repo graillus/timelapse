@@ -13,6 +13,8 @@ import (
 )
 
 func TestPostFrame(t *testing.T) {
+	t.Parallel()
+
 	router := mux.NewRouter()
 	api.ConfigureRoutes(router)
 	api.StoragePath = "/tmp/test"
@@ -21,7 +23,7 @@ func TestPostFrame(t *testing.T) {
 	server.Client()
 
 	c := client.New(server.URL)
-	_, err := c.PostFrame("test/fixtures/frames/1200.jpg")
+	_, err := c.PostFrame("../../../test/fixtures/frames/1200.jpg")
 	require.NoError(t, err)
 
 	assert.FileExists(t, "/tmp/test/uploads/1200.jpg")

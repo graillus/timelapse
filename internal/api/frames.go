@@ -10,20 +10,24 @@ import (
 	"github.com/graillus/timelapse/internal/log"
 )
 
-const uploadsDir = "uploads"
+const (
+	uploadsDir     = "uploads"
+	maxUploadsSize = 10 * int64(units.MiB)
+)
 
-var StoragePath = "/tmp"
+var StoragePath = "/tmp" //nolint:gochecknoglobals
 
 func listFrames(resp http.ResponseWriter, _ *http.Request) {
-	resp.WriteHeader(200)
+	resp.WriteHeader(http.StatusOK)
 }
 
 func postFrame(resp http.ResponseWriter, req *http.Request) {
 	uploadPath := path.Join(StoragePath, uploadsDir)
 
-	err := req.ParseMultipartForm(10 * int64(units.MiB))
+	err := req.ParseMultipartForm(maxUploadsSize)
 	if err != nil {
-		http.Error(resp, err.Error(), 500)
+		http.Error(resp, err.Error(), http.StatusInternalServerError)
+
 		return
 	}
 
@@ -31,6 +35,7 @@ func postFrame(resp http.ResponseWriter, req *http.Request) {
 	if err != nil {
 		log.Warnf("Cannot retrieve the frame file: %s", err)
 		http.Error(resp, err.Error(), http.StatusBadRequest)
+
 		return
 	}
 	defer file.Close()
@@ -44,6 +49,7 @@ func postFrame(resp http.ResponseWriter, req *http.Request) {
 	if err != nil {
 		log.Errorf("Error creating upload directory: %s", err)
 		http.Error(resp, err.Error(), http.StatusInternalServerError)
+
 		return
 	}
 
@@ -52,6 +58,7 @@ func postFrame(resp http.ResponseWriter, req *http.Request) {
 	if err != nil {
 		log.Errorf("Error creating file: %s", err)
 		http.Error(resp, err.Error(), http.StatusInternalServerError)
+
 		return
 	}
 	defer dest.Close()
@@ -61,13 +68,16 @@ func postFrame(resp http.ResponseWriter, req *http.Request) {
 	if err != nil {
 		log.Errorf("Error copying file: %s", err)
 		http.Error(resp, err.Error(), http.StatusInternalServerError)
+
 		return
 	}
 
 	log.Infof("Successfully uploaded frame %s", fileHeader.Filename)
+
 	if err != nil {
 		log.Errorf("Error writing response: %s", err)
 		http.Error(resp, "Error writing response", http.StatusInternalServerError)
+
 		return
 	}
 
