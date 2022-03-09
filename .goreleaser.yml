@@ -3,6 +3,7 @@ before:
     - go mod tidy
 builds:
   - main: cmd/agent
+    binary: tlagent
     env:
       - CGO_ENABLED=0
     goos:
@@ -11,7 +12,15 @@ builds:
       - arm
       - amd64
     goarm:
-      - "7"
+      - "6"
+  - main: cmd/server
+    binary: tlserver
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+    goarch:
+      - amd64
 archives:
   - replacements:
       amd64: x86_64

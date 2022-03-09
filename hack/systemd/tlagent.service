@@ -1,0 +1,10 @@
+[Unit]
+Description=Timelapse Agent
+After=multi-user.target
+
+[Service]
+Type=idle
+ExecStart=/usr/bin/tlagent capture --server-url http://192.168.1.12:8990 --interval 30s > /var/log/tlagent.log 2>&1
+
+[Install]
+WantedBy=multi-user.target

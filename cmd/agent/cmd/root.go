@@ -13,7 +13,7 @@ var rootCmd = &cobra.Command{
 	Short: "Timelapse Agent",
 	Long:  ``,
 	Run: func(cmd *cobra.Command, args []string) {
-		// Do Stuff Here
+		_ = cmd.Help()
 	},
 }
 

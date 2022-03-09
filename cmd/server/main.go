@@ -1,23 +1,42 @@
 package main
 
 import (
-	"log"
 	"net/http"
 
 	"github.com/gorilla/mux"
+	"timelapse/internal/api"
+	"timelapse/internal/log"
 )
 
+type config struct {
+	listenAddr  string
+	storagePath string
+}
+
 func main() {
-	apiRouter := mux.NewRouter()
-	apiRouter.HandleFunc("/api", func(resp http.ResponseWriter, req *http.Request) {
-		_, err := resp.Write([]byte("Hello World"))
-		if err != nil {
-			resp.WriteHeader(200)
-			return
-		}
-		resp.WriteHeader(500)
+	cfg := loadConfig()
+
+	router := mux.NewRouter()
+	router.HandleFunc("/health", func(resp http.ResponseWriter, _ *http.Request) {
+		resp.WriteHeader(200)
 	})
 
-	_ = http.ListenAndServe("0.0.0.0:8990", apiRouter)
-	log.Fatal("server error")
+	apiRouter := router.PathPrefix("/api").Subrouter()
+	api.ConfigureRoutes(apiRouter)
+	api.StoragePath = cfg.storagePath
+
+	go func() {
+		log.Infof("Server listening to %s", cfg.listenAddr)
+		err := http.ListenAndServe(cfg.listenAddr, router)
+		log.Fatalf("Fatal server error: %v", err)
+	}()
+
+	select {}
+}
+
+func loadConfig() config {
+	return config{
+		listenAddr:  "0.0.0.0:8990",
+		storagePath: "/tmp",
+	}
 }
