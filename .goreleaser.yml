@@ -2,7 +2,8 @@ before:
   hooks:
     - go mod tidy
 builds:
-  - main: cmd/agent
+  - id: tlagent
+    main: cmd/agent/main.go
     binary: tlagent
     env:
       - CGO_ENABLED=0
@@ -13,14 +14,21 @@ builds:
       - amd64
     goarm:
       - "6"
-  - main: cmd/server
+  - id: tlserver
+    main: cmd/server/main.go
     binary: tlserver
     env:
       - CGO_ENABLED=0
     goos:
       - linux
     goarch:
+      - arm
       - amd64
 archives:
   - replacements:
       amd64: x86_64
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - '^Merge pull request'

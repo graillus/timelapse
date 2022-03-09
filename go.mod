@@ -1,4 +1,4 @@
-module timelapse
+module github.com/graillus/timelapse
 
 go 1.17
 

@@ -10,9 +10,9 @@ import (
 	"sync"
 	"time"
 
+	"github.com/graillus/timelapse/internal/api/client"
+	"github.com/graillus/timelapse/internal/log"
 	"github.com/spf13/cobra"
-	"timelapse/internal/api/client"
-	"timelapse/internal/log"
 )
 
 type captureOptions struct {

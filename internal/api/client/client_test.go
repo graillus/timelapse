@@ -6,10 +6,10 @@ import (
 	"testing"
 
 	"github.com/gorilla/mux"
+	"github.com/graillus/timelapse/internal/api"
+	"github.com/graillus/timelapse/internal/api/client"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"timelapse/internal/api"
-	"timelapse/internal/api/client"
 )
 
 func TestPostFrame(t *testing.T) {

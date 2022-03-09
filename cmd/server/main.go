@@ -4,8 +4,8 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
-	"timelapse/internal/api"
-	"timelapse/internal/log"
+	"github.com/graillus/timelapse/internal/api"
+	"github.com/graillus/timelapse/internal/log"
 )
 
 type config struct {

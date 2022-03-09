@@ -7,7 +7,7 @@ import (
 	"path"
 
 	"github.com/alecthomas/units"
-	"timelapse/internal/log"
+	"github.com/graillus/timelapse/internal/log"
 )
 
 const uploadsDir = "uploads"

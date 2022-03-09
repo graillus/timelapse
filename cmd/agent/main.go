@@ -1,6 +1,6 @@
 package main
 
-import "timelapse/cmd/agent/cmd"
+import "github.com/graillus/timelapse/cmd/agent/cmd"
 
 func main() {
 	cmd.Execute()
